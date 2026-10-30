@@ -12,6 +12,7 @@ Set the amount of time (or the deadline) at the start of a task, check it while 
 ![Python](https://img.shields.io/badge/python-3.8%2B-yellow)
 ![Dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
+[![CI](https://github.com/233333hi/timer-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/233333hi/timer-skill/actions/workflows/ci.yml)
 
 </div>
 
@@ -243,8 +244,20 @@ timer-skill/
 ├── SKILL.md             # Behaviour spec read by the model (the gate lives here)
 ├── scripts/
 │   └── clock.py         # The timer, stdlib only, no dependencies
+├── tests/
+│   └── test_clock.py    # 10 portable tests (subprocess + isolated state dir)
+├── .github/workflows/
+│   └── ci.yml           # Ubuntu / macOS / Windows × Python 3.9 / 3.13
 └── LICENSE              # MIT
 ```
+
+## ✅ Tests
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+Every test runs against a temporary `DSH_TIMER_STATE` directory, so it never touches your live timers and never depends on the machine's clock or paths.
 
 ---
 

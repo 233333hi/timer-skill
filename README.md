@@ -12,6 +12,7 @@
 ![Python](https://img.shields.io/badge/python-3.8%2B-yellow)
 ![Dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
+[![CI](https://github.com/233333hi/timer-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/233333hi/timer-skill/actions/workflows/ci.yml)
 
 </div>
 
@@ -240,8 +241,20 @@ timer-skill/
 ├── SKILL.md             # 给模型读的行为规范（交付闸门写在这里）
 ├── scripts/
 │   └── clock.py         # 计时器实现，纯标准库，无依赖
+├── tests/
+│   └── test_clock.py    # 10 个可移植测试（子进程 + 隔离状态目录）
+├── .github/workflows/
+│   └── ci.yml           # Ubuntu / macOS / Windows × Python 3.9 / 3.13
 └── LICENSE              # MIT
 ```
+
+## ✅ 自测
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+测试全部跑在 `DSH_TIMER_STATE` 指向的临时目录里，不碰你正在用的计时器，也不依赖机器的时钟或路径。
 
 ---
 
