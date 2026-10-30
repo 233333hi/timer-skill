@@ -147,6 +147,12 @@ class TimerTest(unittest.TestCase):
         self.assertIsNotNone(start.tzinfo, "legacy start was not localised")
         self.assertGreater(now_info["timer"]["remaining_seconds"], 3000)
 
+    def test_now_without_any_state_dir(self):
+        never_created = pathlib.Path(self._tmp.name) / "never-created"
+        proc = run(["now"], never_created)
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertIn("未设定", proc.stdout)
+
     def test_json_report_shape(self):
         run_json(["set", "5m"], self.state)
         now = run_json(["now"], self.state)
