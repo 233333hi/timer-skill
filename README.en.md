@@ -118,19 +118,10 @@ python -I scripts/clock.py now --name refactor --json
 
 ## 🚦 The delivery gate (the point of this skill)
 
-```
-┌─────────────────────────────────────────────┐
-│  timer.satisfied == false                   │
-│     ⛔ Do not deliver                        │
-│     ✅ Spend remaining time on: line-by-line │
-│        re-read / bug hunt / edge cases /     │
-│        generalization / stricter measurement │
-├─────────────────────────────────────────────┤
-│  timer.satisfied == true                    │
-│     ✅ Deliver the best version + metrics +   │
-│        what changed and why                  │
-└─────────────────────────────────────────────┘
-```
+| State | What you may do |
+|---|---|
+| ⛔ `satisfied == false` | **Do not deliver.** The remaining time may only go to: line-by-line re-read / bug hunt / edge cases / generalization / stricter measurement |
+| ✅ `satisfied == true` | Deliver the best version + the metric table (baseline → final) + what changed and why |
 
 Three hard rules, written into `SKILL.md`:
 
