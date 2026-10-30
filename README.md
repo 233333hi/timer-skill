@@ -214,6 +214,9 @@ python -I scripts/clock.py now --name refactor --json
 **Q：跨平台吗？有依赖吗？**
 纯标准库 Python 3.10+，Windows / macOS / Linux 都跑。⚠️ 某些 Windows 环境下 `python3` 是坏掉的 stub，用 `python` 或指定解释器绝对路径。
 
+**Q：CLI 输出是中文，换到英文系统会乱码吗？**
+人类可读的提示是中文；机器可读的字段名是英文，`--json` 可以直接接脚本。旧版 Windows 控制台若显示乱码，先 `chcp 65001` 切到 UTF-8（脚本本身已强制以 UTF-8 写 stdout，CI 里 6 个平台组合都在验证这一点）。
+
 **Q：多个 harness 同时用会打架吗？**
 不会。状态按 `*_SESSION_ID` 隔离；同一会话内用 `--name` 区分任务。没有 session id 的环境会落到 `global`，记得给每个任务起不同 `--name`。
 

@@ -215,6 +215,9 @@ Finishing early does not mean shipping early. The remainder goes into review, bu
 **Any dependencies? Cross-platform?**
 Standard library only, Python 3.10+, Windows / macOS / Linux. ⚠️ On some Windows setups `python3` is a broken stub — use `python` or an absolute interpreter path.
 
+**The CLI prints Chinese — will a non-UTF-8 console garble it?**
+The human-readable lines are Chinese; the machine-readable keys are English, so `--json` plugs straight into scripts. On an old Windows console run `chcp 65001` first (the script already forces UTF-8 on stdout, and CI verifies it across six OS/Python combinations).
+
 **Will several harnesses clash?**
 No. State is keyed by `*_SESSION_ID`; inside one session use `--name`. Environments without a session id fall back to `global`, so give each task a distinct `--name` there.
 
