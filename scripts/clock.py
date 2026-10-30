@@ -153,18 +153,21 @@ def spec_to_target(spec, now):
                              microsecond=0)
         day_kw = rest[1].lower() if len(rest) > 1 else None
         rolled = False
-        if day_kw == "tomorrow":
-            target += timedelta(days=1)
-            rolled = True
-        elif day_kw:
-            mo = _DAY_OFFSET.match(day_kw)
-            if not mo:
-                _fail("无法识别的日修饰: %r" % day_kw)
-            target += timedelta(days=int(mo.group(1)))
-            rolled = True
-        while target <= now:                 # 过点/顺延后再校验
-            target += timedelta(days=1)
-            rolled = True
+        try:
+            if day_kw == "tomorrow":
+                target += timedelta(days=1)
+                rolled = True
+            elif day_kw:
+                mo = _DAY_OFFSET.match(day_kw)
+                if not mo:
+                    _fail("无法识别的日修饰: %r" % day_kw)
+                target += timedelta(days=int(mo.group(1)))
+                rolled = True
+            while target <= now:             # 过点/顺延后再校验
+                target += timedelta(days=1)
+                rolled = True
+        except OverflowError:
+            _fail("时间超出可表示范围: %r" % spec)
         return target, "deadline", ("已顺延到次日" if rolled else "")
 
     # ---- 最短工时
@@ -172,7 +175,10 @@ def spec_to_target(spec, now):
     if secs is not None:
         if secs <= 0:
             _fail("工时必须大于 0: %r" % spec)
-        return now + timedelta(seconds=secs), "duration", ""
+        try:
+            return now + timedelta(seconds=secs), "duration", ""
+        except OverflowError:                # e.g. '999999999d' overflows datetime
+            _fail("时间超出可表示范围: %r" % spec)
 
     _fail("无法解析: %r（支持 '20m' 或 'until 18:00'）" % spec)
 

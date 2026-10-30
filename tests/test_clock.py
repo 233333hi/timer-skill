@@ -83,6 +83,14 @@ class TimerTest(unittest.TestCase):
             self.assertEqual(proc.returncode, 2, "accepted invalid spec %r" % spec)
             self.assertIn("error", json.loads(proc.stdout))
 
+    def test_out_of_range_values_fail_cleanly(self):
+        # datetime only spans up to year 9999; absurd durations must not traceback
+        for spec in ("999999999d", "999999999999h", "until 18:00 +999999999d"):
+            proc = run(["set", spec, "--json"], self.state)
+            self.assertEqual(proc.returncode, 2, "accepted out-of-range spec %r" % spec)
+            self.assertNotIn("Traceback", proc.stderr)
+            self.assertIn("error", json.loads(proc.stdout))
+
     def test_off_clears_only_the_named_timer(self):
         run_json(["set", "10m", "--name", "a"], self.state)
         run_json(["set", "20m", "--name", "b"], self.state)
