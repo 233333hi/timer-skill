@@ -238,7 +238,7 @@ timer-skill/
 ├── scripts/
 │   └── clock.py         # 计时器实现，纯标准库，无依赖
 ├── tests/
-│   └── test_clock.py    # 10 个可移植测试（子进程 + 隔离状态目录）
+│   └── test_clock.py    # 12 个可移植测试（子进程 + 隔离状态目录）
 ├── .github/workflows/
 │   └── ci.yml           # Ubuntu / macOS / Windows × Python 3.10 / 3.13
 └── LICENSE              # MIT

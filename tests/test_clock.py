@@ -119,6 +119,27 @@ class TimerTest(unittest.TestCase):
         now = run_json(["now"], self.state)
         self.assertNotIn("timer", now)
 
+    def test_legacy_naive_state_still_reports(self):
+        # Timers written by older versions stored naive timestamps; they must not
+        # crash the aware-vs-naive subtraction, and must be read as local time.
+        self.state.mkdir(parents=True, exist_ok=True)
+        now = datetime.datetime.now()
+        legacy = {
+            "name": "default", "spec": "1h", "kind": "duration",
+            "start": now.strftime("%Y-%m-%dT%H:%M:%S"),
+            "target": (now + datetime.timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%S"),
+            "session": "test-session",
+        }
+        (self.state / "test-session__default.json").write_text(
+            json.dumps(legacy), encoding="utf-8")
+
+        now_info = run_json(["now"], self.state)
+        self.assertIn("timer", now_info)
+        self.assertFalse(now_info["timer"]["satisfied"])
+        start = datetime.datetime.fromisoformat(now_info["timer"]["start"])
+        self.assertIsNotNone(start.tzinfo, "legacy start was not localised")
+        self.assertGreater(now_info["timer"]["remaining_seconds"], 3000)
+
     def test_json_report_shape(self):
         run_json(["set", "5m"], self.state)
         now = run_json(["now"], self.state)

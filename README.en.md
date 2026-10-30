@@ -239,7 +239,7 @@ timer-skill/
 ├── scripts/
 │   └── clock.py         # The timer, stdlib only, no dependencies
 ├── tests/
-│   └── test_clock.py    # 10 portable tests (subprocess + isolated state dir)
+│   └── test_clock.py    # 12 portable tests (subprocess + isolated state dir)
 ├── .github/workflows/
 │   └── ci.yml           # Ubuntu / macOS / Windows × Python 3.10 / 3.13
 └── LICENSE              # MIT

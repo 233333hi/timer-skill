@@ -216,6 +216,12 @@ def _state_path(name):
     return os.path.join(_STATE_DIR, safe + ".json")
 
 
+def _parse_stamp(text):
+    """Parse a stored timestamp; a naive one (pre-upgrade state) is read as local."""
+    stamp = datetime.fromisoformat(text)
+    return stamp if stamp.tzinfo else stamp.astimezone()
+
+
 def _load(name):
     p = _state_path(name)
     if not os.path.exists(p):
@@ -223,8 +229,8 @@ def _load(name):
     try:
         with open(p, encoding="utf-8") as fh:
             data = json.load(fh)
-        datetime.fromisoformat(data["start"])
-        datetime.fromisoformat(data["target"])
+        _parse_stamp(data["start"])
+        _parse_stamp(data["target"])
         data["spec"], data["kind"]          # required fields; a corrupt file reads as "no timer"
         return data
     except (OSError, ValueError, KeyError, TypeError):
@@ -268,15 +274,15 @@ def _human(secs):
 
 
 def _progress(timer, now):
-    start = datetime.fromisoformat(timer["start"])
-    target = datetime.fromisoformat(timer["target"])
+    start = _parse_stamp(timer["start"])
+    target = _parse_stamp(timer["target"])
     elapsed = (now - start).total_seconds()
     remaining = (target - now).total_seconds()
     return {
         "name": timer.get("name", "default"),
         "spec": timer["spec"],
         "kind": timer["kind"],
-        "start": timer["start"],
+        "start": start.isoformat(timespec="seconds"),
         "target": target.isoformat(timespec="seconds"),
         "elapsed_seconds": int(elapsed),
         "elapsed": _human(elapsed),
