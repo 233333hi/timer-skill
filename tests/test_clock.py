@@ -83,6 +83,13 @@ class TimerTest(unittest.TestCase):
             self.assertEqual(proc.returncode, 2, "accepted invalid spec %r" % spec)
             self.assertIn("error", json.loads(proc.stdout))
 
+    def test_roll_note_only_when_the_system_rolls(self):
+        auto = run(["set", "until 00:00"], self.state)
+        self.assertIn("已顺延", auto.stdout)
+
+        explicit = run(["set", "until 09:00 +1d"], self.state)
+        self.assertNotIn("已顺延", explicit.stdout, "explicit +1d is not an auto-roll")
+
     def test_out_of_range_values_fail_cleanly(self):
         # datetime only spans up to year 9999; absurd durations must not traceback
         for spec in ("999999999d", "999999999999h", "until 18:00 +999999999d"):

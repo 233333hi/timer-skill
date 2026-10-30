@@ -152,23 +152,21 @@ def spec_to_target(spec, now):
         target = now.replace(hour=hms[0], minute=hms[1], second=hms[2],
                              microsecond=0)
         day_kw = rest[1].lower() if len(rest) > 1 else None
-        rolled = False
+        auto_rolled = False
         try:
             if day_kw == "tomorrow":
                 target += timedelta(days=1)
-                rolled = True
             elif day_kw:
                 mo = _DAY_OFFSET.match(day_kw)
                 if not mo:
                     _fail("无法识别的日修饰: %r" % day_kw)
                 target += timedelta(days=int(mo.group(1)))
-                rolled = True
             while target <= now:             # 过点/顺延后再校验
                 target += timedelta(days=1)
-                rolled = True
+                auto_rolled = True
         except OverflowError:
             _fail("时间超出可表示范围: %r" % spec)
-        return target, "deadline", ("已顺延到次日" if rolled else "")
+        return target, "deadline", ("已顺延到次日" if auto_rolled else "")
 
     # ---- 最短工时
     secs = parse_duration(text)
