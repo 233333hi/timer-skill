@@ -26,7 +26,10 @@ def run(args, state_dir, session="test-session", timeout=60):
     env["CLAUDE_CODE_SESSION_ID"] = session
     return subprocess.run(
         [sys.executable, "-I", str(CLOCK)] + list(args),
-        capture_output=True, text=True, env=env, timeout=timeout,
+        capture_output=True, env=env, timeout=timeout,
+        # clock.py always writes UTF-8; decoding with the locale codec breaks on
+        # non-UTF-8 consoles (e.g. cp1252 on the Windows CI runner).
+        encoding="utf-8",
     )
 
 

@@ -9,7 +9,7 @@ Set the amount of time (or the deadline) at the start of a task, check it while 
 [简体中文](README.md) | English
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
-![Python](https://img.shields.io/badge/python-3.8%2B-yellow)
+![Python](https://img.shields.io/badge/python-3.10%2B-yellow)
 ![Dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 [![CI](https://github.com/233333hi/timer-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/233333hi/timer-skill/actions/workflows/ci.yml)
@@ -177,7 +177,7 @@ A delegation with **a floor and no brief**: 12 hours, choose your own problem.
 
 | Observation | Value |
 |---|---|
-| Timer | `set 12h`; `satisfied` flipped to `true` at 08:58 |
+| Timer | `set 12h`; target hit at 08:56:38, gate opened, delivered at 08:58 |
 | Wall clock | 20:56 → 08:58, **12 h 02 m** |
 | Tool calls | **633** |
 | Delivery | Only after the gate opened; every pass moved work forward instead of waiting |
@@ -186,8 +186,8 @@ A delegation with **a floor and no brief**: 12 hours, choose your own problem.
 
 Starting from the single primitive `nand(a, b)`, a 16-bit computer was built bottom-up that runs a self-compiled program, with an independent reference implementation cross-checking every layer:
 
-- ✅ **97/97 tests green**: boolean gates → adder/ALU → registers/RAM/PC → CPU → assembler → stack VM → compiler → self-hosted OS → end-to-end
-- ✅ **~11,000 random programs** cross-checked through two paths (compile→assemble→machine vs. direct interpreter), zero failures
+- ✅ **97/97 tests green** (re-run at publish time: `node --test` → 97 passed, 0 failed, 5.0 s): boolean gates → adder/ALU → registers/RAM/PC → CPU → assembler → stack VM → compiler → self-hosted OS → end-to-end
+- ✅ **~11,000 random programs** cross-checked through two paths (compile→assemble→machine vs. direct interpreter), zero failures (delivery record; a 300-program spot check at publish time was also clean)
 - ✅ Two demos running for real: a Pong game scoring on a seven-segment display, and Conway's Life at 64×64 for 10 generations
 - ✅ A ten-chapter book, *From NAND to an Operating System*, documenting **8 real bugs** found along the way (±32768 comparator overflow, `let a[i]=a[n]` pointer aliasing, a division-wraparound infinite loop)
 - ✅ Five interactive labs (NAND / adder / ALU / CPU single-step / Pong)
@@ -222,7 +222,7 @@ No. `SKILL.md` bans sleep / polling / background waits outright — that is the 
 Finishing early does not mean shipping early. The remainder goes into review, bug hunting, generalization and stricter measurement — that is what separates this from a countdown.
 
 **Any dependencies? Cross-platform?**
-Standard library only, Python 3.8+, Windows / macOS / Linux. ⚠️ On some Windows setups `python3` is a broken stub — use `python` or an absolute interpreter path.
+Standard library only, Python 3.10+, Windows / macOS / Linux. ⚠️ On some Windows setups `python3` is a broken stub — use `python` or an absolute interpreter path.
 
 **Will several harnesses clash?**
 No. State is keyed by `*_SESSION_ID`; inside one session use `--name`. Environments without a session id fall back to `global`, so give each task a distinct `--name` there.
@@ -247,7 +247,7 @@ timer-skill/
 ├── tests/
 │   └── test_clock.py    # 10 portable tests (subprocess + isolated state dir)
 ├── .github/workflows/
-│   └── ci.yml           # Ubuntu / macOS / Windows × Python 3.9 / 3.13
+│   └── ci.yml           # Ubuntu / macOS / Windows × Python 3.10 / 3.13
 └── LICENSE              # MIT
 ```
 

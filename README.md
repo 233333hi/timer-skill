@@ -9,7 +9,7 @@
 简体中文 | [English](README.en.md)
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
-![Python](https://img.shields.io/badge/python-3.8%2B-yellow)
+![Python](https://img.shields.io/badge/python-3.10%2B-yellow)
 ![Dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 [![CI](https://github.com/233333hi/timer-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/233333hi/timer-skill/actions/workflows/ci.yml)
@@ -174,7 +174,7 @@ python -I scripts/clock.py now --name refactor --json
 
 | 观察项 | 数据 |
 |---|---|
-| 计时器 | `set 12h`，`satisfied` 在 08:58 翻为 `true` |
+| 计时器 | `set 12h`；08:56:38 到点，`satisfied` 转 `true`，08:58 交付 |
 | 实际跨度 | 20:56 → 08:58，**12 小时 02 分** |
 | 工具调用 | **633 次** |
 | 交付方式 | 计时器达标后才交付，中间每一轮都在推进而非空转 |
@@ -183,8 +183,8 @@ python -I scripts/clock.py now --name refactor --json
 
 从唯一原语 `nand(a, b)` 出发，自底向上搭出一台能跑自编译程序的 16 位计算机，每一层都有独立的参考实现互相对拍：
 
-- ✅ **97/97 测试全绿**：布尔门 → 加法器/ALU → 寄存器/RAM/PC → CPU/整机 → 汇编器 → 栈式 VM → 编译器 → 自举 OS → 端到端
-- ✅ **约 11,000 个随机程序**走「编译→汇编→整机」与「解释器直跑」双路径对拍，零失败
+- ✅ **97/97 测试全绿**（发布时重跑确认：`node --test` → 97 通过 / 0 失败，5.0 秒）：布尔门 → 加法器/ALU → 寄存器/RAM/PC → CPU/整机 → 汇编器 → 栈式 VM → 编译器 → 自举 OS → 端到端
+- ✅ **约 11,000 个随机程序**走「编译→汇编→整机」与「解释器直跑」双路径对拍，零失败（交付记录；发布时抽查 300 个，同样零失败）
 - ✅ 两个演示跑通：七段数码管记分的弹球游戏、64×64×10 代的康威生命游戏
 - ✅ 十章书稿《从 NAND 到操作系统》，如实记录开发中抓出的 **8 个真 bug**（含 ±32768 比较器溢出、`let a[i]=a[n]` 指针别名、除法回绕死循环）
 - ✅ 五个交互实验室（NAND / 加法器 / ALU / CPU 单步 / 弹球）
@@ -219,7 +219,7 @@ python -I scripts/clock.py now --name refactor --json
 早到不早交。剩余时间用来复查、找 bug、做泛化、加更严的测量；这也是它和"倒计时"的根本区别。
 
 **Q：跨平台吗？有依赖吗？**
-纯标准库 Python 3.8+，Windows / macOS / Linux 都跑。⚠️ 某些 Windows 环境下 `python3` 是坏掉的 stub，用 `python` 或指定解释器绝对路径。
+纯标准库 Python 3.10+，Windows / macOS / Linux 都跑。⚠️ 某些 Windows 环境下 `python3` 是坏掉的 stub，用 `python` 或指定解释器绝对路径。
 
 **Q：多个 harness 同时用会打架吗？**
 不会。状态按 `*_SESSION_ID` 隔离；同一会话内用 `--name` 区分任务。没有 session id 的环境会落到 `global`，记得给每个任务起不同 `--name`。
@@ -244,7 +244,7 @@ timer-skill/
 ├── tests/
 │   └── test_clock.py    # 10 个可移植测试（子进程 + 隔离状态目录）
 ├── .github/workflows/
-│   └── ci.yml           # Ubuntu / macOS / Windows × Python 3.9 / 3.13
+│   └── ci.yml           # Ubuntu / macOS / Windows × Python 3.10 / 3.13
 └── LICENSE              # MIT
 ```
 
